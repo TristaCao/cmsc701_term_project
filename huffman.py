@@ -273,7 +273,60 @@ class HuffmanCode(object):
         if p ==-1:
             return p
         return self.indices_mapping[p]
+    
+    def shift_or_search(self, compressed, pattern):
+        pattern = re.compile(r'[^a-zA-Z]|[a-zA-Z]+').findall(pattern)
+        mark_dict = {}
+        mark = '0'+'1'*len(pattern)
+        for i, p in enumerate(pattern):
+            encoded_p = self.inv_huffman[p]
+            if encoded_p in mark_dict:
+                m = mark_dict[encoded_p]
+                new_m = m[:i] + '0'
+                if i < len(pattern) - 1:
+                    new_m = m[:i] + '0'+m[i+1:]
+                mark_dict[encoded_p] = new_m
+            else:
+                new_m = mark[:i] + '0'
+                if i < len(pattern) - 1:
+                    new_m = mark[:i] + '0'+mark[i+1:]
+                mark_dict[encoded_p] = new_m
+        self.shift_or_match(compressed, mark_dict, len(encoded_p))
+    
+    def shift_or_match(self, compressed, mark_dict, plen):
+        def bitwise_or(str1, str2):
+            assert len(str1) == len(str2)
+            result = ''
+            for i in range(len(str1)):
+                if str1[i] == '1' or str2[i] == '1':
+                    result += '1'
+                else:
+                    result += '0'
+            return result
+        
+        def shift_right(str1):
+            #shift right and pad first bit as 0
+            result = '0'
+            for i in range(len(str1)-1):
+                result += str1[i]
+            return result
+        
+        r = '1'+'1'*plen
+        length = len(string)
+        index, count = 0, 0
+        while (count<=length):
+            if string[index:count] in self.huffman:
+                code = string[index:count]
+            
+                r = shift_right(r)
+                mark = mark_dict[code]
+                result = bitwise_or(r, mark)
+                r = result
+                if result[-1] == '0':
+                    return count-plen, count
+                index = count
 
+            count += 1
 
 
 

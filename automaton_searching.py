@@ -102,6 +102,7 @@ def shift_or_search(text, pmarks, plen):
         result = bitwise_or(r, mark)
         r = result
         if result[-1] == '0':
+            i += 1
             return i-plen, i
     return None, None
 
@@ -126,7 +127,7 @@ def main(args):
     decoded_text = decompress(code, encoded_text)
     pmarks = mark_dic(pattern, code, freqs.frequencies)
     start, end = shift_or_search(decoded_text, pmarks, len(pattern))
-    print(decoded_text[start:end+1])
+    print(decoded_text[start:end])
 if __name__ == '__main__':
     sys.exit(main(sys.argv[1:]))
     
