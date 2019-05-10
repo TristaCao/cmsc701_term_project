@@ -1,6 +1,7 @@
 import os, re, array,argparse, time, sys
 import huffman
 import freq
+import random
 
 def show_match(text, huffman, encoding, pattern):
     p = huffman.search(encoding, pattern)
@@ -15,6 +16,25 @@ def show_match(text, huffman, encoding, pattern):
         if pattern[i]!= text[p+i]:
             print("the matching found is INCORRECT!!!")
             return
+    print("correct matching!!!!!!!!")
+    
+def shift_or_show_match(text, huffman, encoding, pattern):
+    startp, endp = huffman.shift_or_search(encoding, pattern)
+    if startp == None or endp == None:
+        print("No matching found!!")
+        return
+
+    pattern = re.compile(r'[^a-zA-Z]|[a-zA-Z]+').findall(pattern)
+    text = re.compile(r'[^a-zA-Z]|[a-zA-Z]+').findall(text)
+
+    for i in range(len(pattern)):
+        if pattern[i]!= text[startp+i]:
+            print("the matching found is INCORRECT!!!")
+            return
+        else:
+            print("Wrooooooooong!")
+            print(pattern)
+            print(text[stratp:endp])
     print("correct matching!!!!!!!!")
 
 
@@ -83,5 +103,13 @@ print("tagged huffman: ")
 print("\tcompress time: ", end - start)
 print("\tcompressed rate:", len(tagged_encoding)/original_len)
 print()
-pattern = 'she walk'
-show_match(in_str,tagged_huffman, tagged_encoding, pattern)
+for i in range(100):
+    pattern_len = 10
+    original_text = re.compile(r'[^a-zA-Z]|[a-zA-Z]+').findall(in_str)
+    index = random.randint(0,len(original_text)-pattern_len)
+    pattern = ' '.join(original_text[index: index+pattern_len])
+    if pattern not in in_str:
+        continue
+#    pattern = 'she walk'
+    show_match(in_str,tagged_huffman, tagged_encoding, pattern)
+    shift_or_show_match(in_str,tagged_huffman, tagged_encoding, pattern)
