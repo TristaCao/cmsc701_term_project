@@ -124,6 +124,7 @@ for i in range(0,10):
     end = time.time()
     print(str(i)+"k=1 BM search time:", end - start)
 
+    start = time.time()
     for r in range(0,len(text)-10,int((len(text)-10)/10)):
         pattern = "".join(text[r:r+10])
         shift_or_show_match(in_str,tagged_huffman, tagged_encoding, pattern)
@@ -131,9 +132,10 @@ for i in range(0,10):
     print(str(i)+"k=1 TAGGED Shift-Or search time:", end - start)
 
     """PLAIN huffman shift-or"""
-
     plain_huffman = huffman.HuffmanCode(freqs, 256)
     plain_encoding = plain_huffman.encode(in_str, True)
+    start = time.time()
+
     for r in range(0,len(text)-10,int((len(text)-10)/10)):
         pattern = "".join(text[r:r+10])
         shift_or_show_match(in_str,plain_huffman, plain_encoding, pattern)
