@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import os, re, array, pickle, argparse, time, sys
+import os, re, array, pickle, argparse, time, sys,random
 
 
 class Node(object):
@@ -51,8 +51,9 @@ class HuffmanCompress(object):
         with open(self.text_path, encoding='utf-8') as f:
             text = f.read()
         if self.level == 'word':
-            text=re.sub(r'([^\s\w]|_)+', '', text)
-            text = text.strip().split(" ")#re.compile(r'[^a-zA-Z]|[a-zA-Z]+').findall(text) #!! modified
+            text=re.sub('\n', '', text)
+            text=re.sub(r'[^a-zA-Z\s]', '', text)
+            text = text.strip().split()#re.compile(r'[^a-zA-Z]|[a-zA-Z]+').findall(text) #!! modified
             # Get words and punctuations. Another method: text = [i for i in re.split(r'(\W)', text) if i != '']
         text_fre = {}
         for i in range(len(text)):
@@ -130,6 +131,9 @@ class HuffmanCompress(object):
 
 
     ###### my code starts here, __to_dic function above is modified###
+
+    def getText(self):
+        return self.text
 
     def getCompressedText(self,mytext):
         tokens=mytext
@@ -247,8 +251,7 @@ class HuffmanCompress(object):
             currcode,remaincode=self.traverseToLeaf(remaincode)
             currmask=masks[currcode]
             Ds=self.shiftANDApprox(int(currmask,2),Ds)
-            print(Ds,Ds[num_error],targetD)
-            if(Ds[num_error]>targetD):
+            if(Ds[num_error]>=targetD):
                 startpos=pos-len(tokens)+1
                 endpos=pos
                 print("FOUND: startpos:",startpos, self.text[startpos:endpos+1])
@@ -276,16 +279,47 @@ class HuffmanCompress(object):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-s", help="specify character- or word-based Huffman encoding", choices=["char", "word"])
-    parser.add_argument("infile", help="pass infile to huff-compress/decompress for compression/decompression")
-    args = parser.parse_args()
-    start = time.time()
-    compress = HuffmanCompress(args.s, args.infile)
-    #print(compress.getCompressedText())
-    end = time.time()
-    print("compress time: ", end - start)
     ##Run python huff-compress.py -s word mydata.txt
-    compress.plain_search("there is")
-    compress.regex_search("two *r[ef]es there")
-    compress.approx_search("two ok there is",2) #allow 2 substitution
+    #parser = argparse.ArgumentParser()
+    #parser.add_argument("-s", help="specify character- or word-based Huffman encoding", choices=["char", "word"])
+    #parser.add_argument("infile", help="pass infile to huff-compress/decompress for compression/decompression")
+    #args = parser.parse_args()
+    #start = time.time()
+    #compress = HuffmanCompress(args.s, args.infile)
+    #end = time.time()
+    #print("compress time: ", end - start)
+
+    
+    
+    
+    
+    
+    
+
+    #constructing test file
+    # text=compress.getText();
+    # i=0;
+    # for r in range(int((len(text))/10),len(text),int((len(text))/10)):
+    #     littletext=" ".join(text[0:r])
+    #     with open("data/testdata"+str(i), "w") as text_file:
+    #         text_file.write(littletext);
+    #         print("writing"+str(i))
+    #     i+=1
+
+    for i in range(0,10):
+        path="data/"
+        #compress = HuffmanCompress("word","mydata.txt")
+        compress = HuffmanCompress("word",path+"testdata"+str(i))
+        text=compress.getText();
+        start = time.time()
+        for r in range(0,len(text)-10,int((len(text)-10)/10)):
+            #r=random.randint(0,len(text)-10)
+            query=" ".join(text[r:r+10])
+            #compress.plain_search(query)
+            #compress.regex_search(query)
+            compress.approx_search(query,1)
+        end = time.time()
+        print(str(i)+"k=1 search time:", end - start)
+
+
+    #compress.regex_search("two *r[ef]es there")
