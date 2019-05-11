@@ -37,11 +37,12 @@ class HuffmanCompress(object):
         self.text, self.text_fre = self.__to_dic()
         self.root, self.text_code = self.__to_tree()
         end1 = time.time()
-        print('build the symbol model: ', end1 - start1)
+        #print('build the symbol model: ', end1 - start1)
         start2 = time.time()
         self.__compress()
         end2 = time.time()
-        print('encode the symbol model: ', end2 - start2)
+        #print('encode the symbol model: ', end2 - start2)
+        self.code_text=self.buildcodetext()
 
     def __to_dic(self):
         """
@@ -132,6 +133,13 @@ class HuffmanCompress(object):
 
     ###### my code starts here, __to_dic function above is modified###
 
+    def buildcodetext(self):
+        code_text={}
+        for key in self.text_code:
+            code_text[self.text_code[key]]=key
+        
+        return code_text
+
     def getText(self):
         return self.text
 
@@ -143,6 +151,14 @@ class HuffmanCompress(object):
         return compresed
 
     def traverseToLeaf(self,code):
+        curr=code
+        processedcode=""
+        for i in range(1,len(curr)):
+            if(curr[0:i] in self.code_text):
+                return curr[0:i],curr[i:]
+        
+        return "",""
+    def traverseToLeaf2(self,code):
         curr=code
         currnode=self.root
         processedcode=""
@@ -232,12 +248,14 @@ class HuffmanCompress(object):
 
         while(len(remaincode)>0):
             currcode,remaincode=self.traverseToLeaf(remaincode)
+            if(currcode==""):
+                break
             currmask=masks[currcode]
             D=self.shiftAND(int(currmask,2),D)
             if(D==targetD):
                 startpos=pos-len(tokens)+1
                 endpos=pos
-                print("FOUND: startpos:",startpos, self.text[startpos:endpos+1])
+                #print("FOUND: startpos:",startpos, self.text[startpos:endpos+1])
                 break
             pos+=1
 
@@ -254,7 +272,7 @@ class HuffmanCompress(object):
             if(Ds[num_error]>=targetD):
                 startpos=pos-len(tokens)+1
                 endpos=pos
-                print("FOUND: startpos:",startpos, self.text[startpos:endpos+1])
+                #print("FOUND: startpos:",startpos, self.text[startpos:endpos+1])
                 break
             pos+=1
             
@@ -262,9 +280,16 @@ class HuffmanCompress(object):
 
 
     def plain_search(self,query):
+        start = time.time()
         tokens=query.split()
+        #start2 = time.time()
+        #print(("split token",start2-start))
         masks=self.computemask(tokens)
+        #start3 = time.time()
+        #print(("compute mask token",start3-start2))
         self.search(tokens,masks)
+        #start4 = time.time()
+        #print(("search token",start4-start3))
 
     def regex_search(self,query):
         tokens=query.split()
@@ -315,11 +340,11 @@ if __name__ == '__main__':
         for r in range(0,len(text)-10,int((len(text)-10)/10)):
             #r=random.randint(0,len(text)-10)
             query=" ".join(text[r:r+10])
-            #compress.plain_search(query)
+            compress.plain_search(query)
             #compress.regex_search(query)
-            compress.approx_search(query,1)
+            #compress.approx_search(query,2)
         end = time.time()
-        print(str(i)+"k=1 search time:", end - start)
+        print(end - start)
 
 
     #compress.regex_search("two *r[ef]es there")
