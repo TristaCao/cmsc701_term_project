@@ -291,7 +291,7 @@ class HuffmanCode(object):
                 if i < len(pattern) :
                     new_m = mark[:i] + '0'+mark[i+1:]
                 mark_dict[encoded_p] = new_m
-        self.shift_or_match(compressed, mark_dict, len(pattern))
+        return self.shift_or_match(compressed, mark_dict, len(pattern))
 
     def shift_or_match(self, compressed, mark_dict, plen):
         def bitwise_or(str1, str2):
