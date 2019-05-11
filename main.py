@@ -31,10 +31,6 @@ def shift_or_show_match(text, huffman, encoding, pattern):
         if pattern[i]!= text[startp+i]:
             print("the matching found is INCORRECT!!!")
             return
-        else:
-            print("Wrooooooooong!")
-            print(pattern)
-            print(text[stratp:endp])
     print("correct matching!!!!!!!!")
 
 
@@ -106,10 +102,11 @@ if not args.infile == "":
     print()
 
 
-for i in range(0,10):
+for i in range(0,1):
     path="testdata/testdata"+ str(i)
     with open(path) as f:
         in_str = f.read()
+
 
     freq_dict = freq.str_freq(in_str, True)
     freqs = list(freq_dict.items())
@@ -128,9 +125,9 @@ for i in range(0,10):
     print(str(i)+"k=1 BM search time:", end - start)
 
     for r in range(0,len(text)-10,int((len(text)-10)/10)):
-        pattern = " ".join(text[r:r+10])
-
+        pattern = "".join(text[r:r+10])
         shift_or_show_match(in_str,tagged_huffman, tagged_encoding, pattern)
+        break
     end = time.time()
     print(str(i)+"k=1 Shift-Or search time:", end - start)
 
