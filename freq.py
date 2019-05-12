@@ -11,9 +11,8 @@ def str_freq(s, word = False):
 
     freqs = dict()
 
-    if word == True:
-        s = re.compile(r'[^a-zA-Z]|[a-zA-Z]+').findall(s)
 
+    s = re.findall(r"[\w']+|[.,!?;]", s)
     for c in s:
         if c in freqs:
             freqs[c] += 1
@@ -24,6 +23,7 @@ def str_freq(s, word = False):
     slen = len(s)
     for c in freqs.keys():
         freqs[c] /= slen
+
 
     return freqs
 
