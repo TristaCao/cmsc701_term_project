@@ -226,7 +226,8 @@ class HuffmanCode(object):
         :returns: String of digits that represents Huffman encoding.
         """
         if word == True:
-            messages = re.compile(r'[^a-zA-Z]|[a-zA-Z]+').findall(messages)
+            #messages = re.compile(r'[^a-zA-Z]|[a-zA-Z]+').findall(messages)
+            messages = re.findall(r"[\w']+|[.,!?;]", messages)
 
         text_code = ""
 
@@ -263,7 +264,8 @@ class HuffmanCode(object):
         :pattern: the matching pattern form the original text
         :return: the index of the starting position for the last occurrence
         """
-        pattern = re.compile(r'[^a-zA-Z]|[a-zA-Z]+').findall(pattern)
+        #pattern = re.compile(r'[^a-zA-Z]|[a-zA-Z]+').findall(pattern)
+        #pattern = re.findall(r"[\w']+|[.,!?;]", pattern)
         try:
             encoded_pattern = "".join(self.inv_huffman[p] for p in pattern)
         except KeyError:
@@ -275,7 +277,8 @@ class HuffmanCode(object):
         return self.indices_mapping[p]
 
     def shift_or_search(self, compressed, pattern):
-        pattern = re.compile(r'[^a-zA-Z]|[a-zA-Z]+').findall(pattern)
+        #pattern = re.compile(r'[^a-zA-Z]|[a-zA-Z]+').findall(pattern)
+        #pattern = re.findall(r"[\w']+|[.,!?;]", pattern)
 
         mark_dict = {}
         mark = '0'+'1'*len(pattern)

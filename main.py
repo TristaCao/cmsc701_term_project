@@ -9,8 +9,10 @@ def show_match(text, huffman, encoding, pattern):
         print("No matching found!!")
         return
 
-    pattern = re.compile(r'[^a-zA-Z]|[a-zA-Z]+').findall(pattern)
-    text = re.compile(r'[^a-zA-Z]|[a-zA-Z]+').findall(text)
+    #pattern = re.compile(r'[^a-zA-Z]|[a-zA-Z]+').findall(pattern)
+    #text = re.compile(r'[^a-zA-Z]|[a-zA-Z]+').findall(text)
+    #pattern = re.findall(r"[\w']+|[.,!?;]", pattern)
+    text = re.findall(r"[\w']+|[.,!?;]", text)
 
     for i in range(len(pattern)):
         if pattern[i]!= text[p+i]:
@@ -24,8 +26,10 @@ def shift_or_show_match(text, huffman, encoding, pattern):
         print("No matching found!!")
         return
 
-    pattern = re.compile(r'[^a-zA-Z]|[a-zA-Z]+').findall(pattern)
-    text = re.compile(r'[^a-zA-Z]|[a-zA-Z]+').findall(text)
+    #pattern = re.compile(r'[^a-zA-Z]|[a-zA-Z]+').findall(pattern)
+    #text = re.compile(r'[^a-zA-Z]|[a-zA-Z]+').findall(text)
+    #pattern = re.findall(r"[\w']+|[.,!?;]", pattern)
+    text = re.findall(r"[\w']+|[.,!?;]", text)
 
     for i in range(len(pattern)):
         if pattern[i]!= text[startp+i]:
@@ -112,13 +116,15 @@ for i in range(0,10):
     freqs = list(freq_dict.items())
     tagged_huffman = huffman.HuffmanCode(freqs, 128, True)
     tagged_encoding = tagged_huffman.encode(in_str, True)
-    text = re.compile(r'[^a-zA-Z]|[a-zA-Z]+').findall(in_str)
+    #text = re.compile(r'[^a-zA-Z]|[a-zA-Z]+').findall(in_str)
+    text = re.findall(r"[\w']+|[.,!?;]", in_str)
 
 
     start = time.time()
     for r in range(0,len(text)-10,int((len(text)-10)/10)):
-        pattern = "".join(text[r:r+10])
+        #pattern = "".join(text[r:r+10])
         #print(pattern)
+        pattern = text[r:r+10]
 
         show_match(in_str,tagged_huffman, tagged_encoding, pattern)
     end = time.time()
@@ -126,7 +132,8 @@ for i in range(0,10):
 
     start = time.time()
     for r in range(0,len(text)-10,int((len(text)-10)/10)):
-        pattern = "".join(text[r:r+10])
+        #pattern = "".join(text[r:r+10])
+        pattern = text[r:r+10]
         shift_or_show_match(in_str,tagged_huffman, tagged_encoding, pattern)
     end = time.time()
     print(str(i)+"k=1 TAGGED Shift-Or search time:", end - start)
@@ -137,7 +144,8 @@ for i in range(0,10):
     start = time.time()
 
     for r in range(0,len(text)-10,int((len(text)-10)/10)):
-        pattern = "".join(text[r:r+10])
+        #pattern = "".join(text[r:r+10])
+        pattern = text[r:r+10]
         shift_or_show_match(in_str,plain_huffman, plain_encoding, pattern)
     end = time.time()
     print(str(i)+"k=1 PLAIN Shift-Or search time:", end - start)
