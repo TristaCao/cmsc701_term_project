@@ -224,9 +224,10 @@ class HuffmanCompress(object):
                 regex=regex+"$"
 
             if(token[0]=="*"):
-                regex="^[a-zA-Z0-9]*"+regex[1:]
+                regex="^*"+regex[1:]
             else:
                 regex="^"+regex
+            regex=re.sub("\*","[a-zA-Z0-9]*",regex)
             regextokens.append(regex)
         for key in self.text_code:
             val=self.text_code[key]
@@ -255,9 +256,11 @@ class HuffmanCompress(object):
             if(D==targetD):
                 startpos=pos-len(tokens)+1
                 endpos=pos
+                return startpos,endpos
                 #print("FOUND: startpos:",startpos, self.text[startpos:endpos+1])
                 break
             pos+=1
+        return -1,-1
 
     def search_allow_error(self,tokens,masks,num_error):
         Ds=[0]*(num_error+1)
@@ -272,9 +275,12 @@ class HuffmanCompress(object):
             if(Ds[num_error]>=targetD):
                 startpos=pos-len(tokens)+1
                 endpos=pos
+                return startpos,endpos
                 #print("FOUND: startpos:",startpos, self.text[startpos:endpos+1])
                 break
             pos+=1
+        return -1,-1
+
             
 
 
@@ -287,20 +293,39 @@ class HuffmanCompress(object):
         masks=self.computemask(tokens)
         #start3 = time.time()
         #print(("compute mask token",start3-start2))
-        self.search(tokens,masks)
+        return self.search(tokens,masks)
         #start4 = time.time()
         #print(("search token",start4-start3))
 
     def regex_search(self,query):
         tokens=query.split()
         masks=self.computemaskRegex(tokens)
-        self.search(tokens,masks)
+        return self.search(tokens,masks)
 
     def approx_search(self,query,num_error):
         tokens=query.split()
         masks=self.computemask(tokens)
-        self.search_allow_error(tokens,masks,num_error)
+        return self.search_allow_error(tokens,masks,num_error)
 
+
+def experiment(type,k=0):
+    for i in range(0,10):
+        fn="testdata/testdata"+str(i)
+        compress = HuffmanCompress("word",fn)
+        text=compress.getText();
+        start = time.time()
+        for r in range(0,len(text)-10,int((len(text)-10)/10)):
+            #r=random.randint(0,len(text)-10)
+            query=" ".join(text[r:r+10])
+            if(type=="plain"):
+                compress.plain_search(query)
+            if(type=="approx"):
+                compress.approx_search(query,k)
+            if(type=="regex"):
+                compress.regex_search(query)
+        end = time.time()
+        print("FileName:",fn)
+        print("Time elapsed for "+type+" search:",end - start)
 
 
 if __name__ == '__main__':
@@ -314,37 +339,40 @@ if __name__ == '__main__':
     #end = time.time()
     #print("compress time: ", end - start)
 
-    
-    
-    
-    
-    
-    
 
-    #constructing test file
-    # text=compress.getText();
-    # i=0;
-    # for r in range(int((len(text))/10),len(text),int((len(text))/10)):
-    #     littletext=" ".join(text[0:r])
-    #     with open("data/testdata"+str(i), "w") as text_file:
-    #         text_file.write(littletext);
-    #         print("writing"+str(i))
-    #     i+=1
-
-    for i in range(0,10):
-        path="data/"
-        #compress = HuffmanCompress("word","mydata.txt")
-        compress = HuffmanCompress("word",path+"testdata"+str(i))
-        text=compress.getText();
-        start = time.time()
-        for r in range(0,len(text)-10,int((len(text)-10)/10)):
-            #r=random.randint(0,len(text)-10)
-            query=" ".join(text[r:r+10])
-            compress.plain_search(query)
-            #compress.regex_search(query)
-            #compress.approx_search(query,2)
-        end = time.time()
-        print(end - start)
+    #Runing experiment
+    #experiment("plain")
+    #experiment("approx",1)
+    #experiment("approx",2)
+    #experiment("regex")
+    
+    #individual runs
+    filename="mydata.txt" #specify your file name here
+    compress = HuffmanCompress("word",filename)
+    text=compress.getText();
 
 
-    #compress.regex_search("two *r[ef]es there")
+
+    #Plain search 
+    startpos,endpos=compress.plain_search("there is some")
+    print("%s at position %d %d"%(text[startpos:endpos+1],startpos,endpos))
+
+    #Approx search k=1
+    startpos,endpos=compress.approx_search("there is teee",1)
+    print("%s at position %d %d"%(text[startpos:endpos+1],startpos,endpos))
+
+    #Approx search k=2
+    startpos,endpos=compress.approx_search("there is teee",2)
+    print("%s at position %d %d"%(text[startpos:endpos+1],startpos,endpos))
+
+    #regex
+    ## * matches any number of token between [a-zA-Z0-9], Eg t* == t and  any number of token following t
+    ## . can replace any token
+    startpos,endpos=compress.regex_search("there are *a*")
+    print("%s at position %d %d"%(text[startpos:endpos+1],startpos,endpos))
+    startpos,endpos=compress.regex_search("there are *x*")
+    print("%s at position %d %d"%(text[startpos:endpos+1],startpos,endpos))
+    startpos,endpos=compress.regex_search("there is s.me")
+    print("%s at position %d %d"%(text[startpos:endpos+1],startpos,endpos))
+    startpos,endpos=compress.regex_search("two *r[ef]es there")
+    print("%s at position %d %d"%(text[startpos:endpos+1],startpos,endpos))
