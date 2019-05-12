@@ -103,7 +103,30 @@ if not args.infile == "":
     print("\tcompressed rate:", len(tagged_encoding)/original_len)
     print()
 
+# path = "testdata/testdata1"
+# in_str = ''
+# with open(path) as f:
+#     in_str = f.read()
 
+# # tagged huffman
+# freq_dict = freq.str_freq(in_str, True)
+# freqs = list(freq_dict.items())
+# tagged_huffman = huffman.HuffmanCode(freqs, 128, True)
+# tagged_encoding = tagged_huffman.encode(in_str, True)
+# #text = re.compile(r'[^a-zA-Z]|[a-zA-Z]+').findall(in_str)
+# text = re.findall(r"[\w']+|[.,!?;]", in_str)
+
+# pattern = ""
+
+# # Boyer Moore
+# show_match(in_str,tagged_huffman, tagged_encoding, pattern)
+# # Shift-Or
+# shift_or_show_match(in_str,tagged_huffman, tagged_encoding, pattern)
+# # Shift-Or Plain Huffman
+# plain_huffman = huffman.HuffmanCode(freqs, 256)
+# plain_encoding = plain_huffman.encode(in_str, True)
+# shift_or_show_match(in_str,plain_huffman, plain_encoding, pattern)
+    
 for i in range(0,10):
     path="testdata/testdata"+ str(i)
     with open(path) as f:
