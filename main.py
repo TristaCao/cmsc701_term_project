@@ -26,9 +26,7 @@ def shift_or_show_match(text, huffman, encoding, pattern):
         print("No matching found!!")
         return
 
-    #pattern = re.compile(r'[^a-zA-Z]|[a-zA-Z]+').findall(pattern)
-    #text = re.compile(r'[^a-zA-Z]|[a-zA-Z]+').findall(text)
-    #pattern = re.findall(r"[\w']+|[.,!?;]", pattern)
+
     text = re.findall(r"[\w']+|[.,!?;]", text)
 
     for i in range(len(pattern)):
