@@ -15,7 +15,7 @@ def show_match(text, huffman, encoding, pattern):
         if pattern[i]!= text[p+i]:
             print("the matching found is INCORRECT!!!")
             return
-    print("correct matching at %s th word!!!!!!!!"%p)
+    print("correct matching at %s th word!"%p)
 
 def shift_or_show_match(text, huffman, encoding, pattern):
     startp, endp = huffman.shift_or_search(encoding, pattern)
@@ -30,13 +30,13 @@ def shift_or_show_match(text, huffman, encoding, pattern):
         if pattern[i]!= text[startp+i]:
             print("the matching found is INCORRECT!!!")
             return
-    print("correct matching at %s th word!!!!!!!!"%p)
+    print("correct matching at %s th word!"%startp)
 
 
 parser = argparse.ArgumentParser()
 #parser.add_argument("infile", help="pass infile to huff-compress/decompress for compression/decompression")
 parser.add_argument("-f", "--infile", default = "", help="pass infile to compress")
-parser.add_argument( "pattern", help="pass pattern to search")
+parser.add_argument( "-p", "--pattern", help="pass pattern to search")
 parser.add_argument("-s", "--type", default = "bm", help="choose searching method", choices=["bm", "tso","pso"])
 
 
