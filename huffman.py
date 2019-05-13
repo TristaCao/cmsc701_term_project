@@ -63,10 +63,10 @@ def huffman_nary_tree(probabilities, digits):
 
     if len(probabilities) == 1:
         symbol, freq = probabilities[0]
-        if freq != 1:
-            print("The probabilities sum to {} (!= 1)...".format(freq))
-        if math.isclose(probabilities[0].key, 1.0):
-            print("(but they are close)")
+        #if freq != 1:
+            #print("The probabilities sum to {} (!= 1)...".format(freq))
+        #if math.isclose(probabilities[0].key, 1.0):
+            #print("(but they are close)")
 
         return TreeNode(freq, symbol)
 
@@ -85,10 +85,10 @@ def huffman_nary_tree(probabilities, digits):
         # Have to grab `digits` nodes from now on to meet an optimum code requirement.
         probabilities = combine_and_replace(probabilities, digits)
 
-    if probabilities[0].key != 1:
-        print("The probabilities sum to {} (!= 1)...".format(probabilities[0].key))
-        if math.isclose(probabilities[0].key, 1.0):
-            print("(but they are close)")
+    #if probabilities[0].key != 1:
+        #print("The probabilities sum to {} (!= 1)...".format(probabilities[0].key))
+        #if math.isclose(probabilities[0].key, 1.0):
+            #print("(but they are close)")
 
     return probabilities.pop()
 
@@ -225,9 +225,9 @@ class HuffmanCode(object):
         :word: True if word-based, False if char-based(default)
         :returns: String of digits that represents Huffman encoding.
         """
-        if word == True:
+        #if word == True:
             #messages = re.compile(r'[^a-zA-Z]|[a-zA-Z]+').findall(messages)
-            messages = re.findall(r"[\w']+|[.,!?;]", messages)
+        messages = re.findall(r"[\w']+|[.,!?;]", messages)
 
         text_code = ""
 
@@ -339,28 +339,3 @@ class HuffmanCode(object):
 
             count += 1
         return None, None
-
-
-
-if __name__ == "__main__":
-    from freq import str_freq
-    with open("test.txt") as f:
-        in_str = f.read()
-
-    freqs = str_freq(in_str)
-    probabilities = list(freqs.items())
-
-    #root = huffman_nary_tree(probabilities, 2)
-    huffman = HuffmanCode(probabilities, 2)
-    #alt_root = huffman_nary_tree(probabilities, 128)
-    alt_huffman = HuffmanCode(probabilities, 128, True)
-
-    #print(alt_huffman.encode(in_str))
-    print()
-    print(huffman.encode(in_str))
-    print()
-    print(huffman.decode(huffman.encode(in_str)))
-    print()
-    #print(ascii_encode(in_str))
-    print()
-    #print(alt_huffman.decode(alt_huffman.encode(in_str)))
